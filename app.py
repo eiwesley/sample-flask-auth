@@ -66,6 +66,17 @@ def create_user():
   return jsonify({"message": "Credenciais inválidas"}), 400
 
 
+@app.route("/user/<int:id_user>", methods=["GET"])
+@login_required
+def read_user(id_user: int):
+  user = User.query.get(id_user)
+
+  if user:
+    return {"username": user.username}
+
+  return jsonify({"message": "Usuário não encontrado"}), 404
+
+
 @app.route("/hello-world", methods=["GET"])
 def hello_world():
   return "Hello world"
