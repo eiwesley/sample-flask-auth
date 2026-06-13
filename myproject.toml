@@ -1,0 +1,104 @@
+# ============================
+# Projeto
+# Referência: https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+#
+# Instale o pacote: python-dotenv
+# Mostrei como no README.md
+#
+# Os pontos de atenção estão comentados próximo das chaves, aqui só coloquei um
+# lembrete.
+#
+# Atenção: As versões do Python devem ser consistentes entre:
+#   - project.requires-python
+#   - tool.ruff.target-version
+#   - tool.pyright.pythonVersion
+#
+# Atenção: O nome do pacote principal deve ser consistente entre:
+#   - project.scripts
+#   - tool.ruff.lint.isort.known-first-party
+#   - A pasta dentro de 'src/'
+# ============================
+[project]
+name = "sample-flask-auth"
+version = "0.0.1"
+description = "sample-flask-auth"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Wesley Medeiros", email = "wesley.coelho@outlook.com" }]
+requires-python = ">=3.14"
+dependencies = ["python-dotenv>=1.1.0"]
+
+[project.urls]
+Homepage = "https://github.com/eiwesley"
+Documentation = "https://github.com/eiwesley/sample-flask-auth"
+Repository = "https://github.com/eiwesley/sample-flask-auth"
+Issues = "https://github.com/eiwesley/sample-flask-auth/issues"
+# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+  "ruff",
+  "pyright",
+  "pytest",
+  "pytest-xdist",
+  "Flask",
+  "Flask-SQLAlchemy==3.1.1",
+  "Flask-Login==0.6.3",
+  "Werkzeug==3.1.8",
+  "requests==2.34.2",
+  "ruff==0.15.17",
+  "pytest==9.0.3",
+]
+
+[project.scripts]
+# Define os comandos de console. A chave ('sample-flask-auth') é o comando.
+# O valor aponta para 'nome_do_pacote.nome_do_modulo:nome_da_funcao'.
+# Ex: 'my_package.main:run' -> src/my_package/main.py (e a função run lá dentro).
+# Lembre-se de sincronizar o nome do pacote com 'known-first-party' do Ruff.
+sample-flask-auth = "my_package.my_module:run_from_script"
+
+# ============================
+# Tipagem (Pyright)
+# ============================
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.14"
+include = ["src", 'tests']
+exclude = [
+  "**/venv",
+  "**/.venv",
+  "**/env",
+  "**/.env",
+  "**/node_modules",
+  "**/__pycache__",
+]
+venv = ".venv"
+venvPath = "."
+executionEnvironments = [{ root = "src" }]
+
+# ============================
+# Testes (Pytest)
+# ============================
+[tool.pytest.ini_options]
+addopts = "-s --color=yes --tb=short"
+# Adiciona 'src' ao path do Python durante os testes. Isso permite que
+# os testes em `tests/` importem os módulos de `src/` sem erros.
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+
+# ============================
+# Build e Setuptools
+# ============================
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+# Informa ao setuptools para encontrar os pacotes dentro da pasta 'src'.
+# Essencial para a estrutura de layout com 'src/'.
+where = ["src"]
+
+[tool.setuptools]
+# Mapeia o diretório raiz de pacotes para 'src'.
+package-dir = { "" = "src" }
