@@ -12,4 +12,4 @@ services:
     expose:
       - "3306"
     volumes:
-      - /SeuCaminhoParaPastaMYSQL:/var/lib/mysql
+      - /Users/wesle/www/Rocketseat/ignite/python/sample-flask-auth/mysql:/var/lib/mysql
