@@ -60,7 +60,7 @@ def create_user():
   password = data.get("password")
 
   if username and password:
-    user = User(username=username, password=password)
+    user = User(username=username, password=password, role="user")
     db.session.add(user)
     db.session.commit()
     return jsonify({"message": "Usuário cadastrado com sucesso"}), 201
@@ -85,6 +85,9 @@ def update_user(id_user: int):
   user = User.query.get(id_user)
   data = request.json
 
+  if id_user != current_user.id and current_user.role == "user":
+    return jsonify({"message": "Operação não permitida"}), 403
+
   if user and data.get("password"):
     user.password = data.get("password")
     db.session.commit()
@@ -98,6 +101,9 @@ def update_user(id_user: int):
 @login_required
 def delete_user(id_user: int):
   user = User.query.get(id_user)
+
+  if current_user.role != "admin":
+    return jsonify({"message": "Operação não permitida"}), 403
 
   if id_user == current_user.id:
     return jsonify({"message": "Deleção não permitida"}), 403
